@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block title %}Event Detail{% endblock %}
+
+{% block content %}
+<h1>{{ event.name }}</h1>
+<p>Date: {{ event.date }}</p>
+<div class="btn-group mt-3" role="group">
+    <a href="{% url 'event_edit' event.pk %}" class="btn btn-secondary">Edit</a>
+    <a href="{% url 'event_delete' event.pk %}" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this event?');">Delete</a>
+</div>
+<a href="{% url 'event_list' %}" class="btn btn-primary mt-3">Back to events</a>
+
+<h2>Reservations</h2>
+<ul class="list-group">
+    {% for reservation in reservations %}
+        <li class="list-group-item">
+            {{ reservation.user }} - {{ reservation.seats }} seats
+            <a href="{% url 'reservation_edit' reservation.pk %}" class="btn btn-secondary btn-sm">Edit</a>
+            <a href="{% url 'reservation_delete' reservation.pk %}" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this reservation?');">Delete</a>
+        </li>
+    {% endfor %}
+</ul>
+<a href="{% url 'reservation_new' event.pk %}" class="btn btn-primary mt-3">Add Reservation</a>
+
+<h2>Comments</h2>
+<ul class="list-group">
+    {% for comment in comments %}
+        <li class="list-group-item">
+            <strong>{{ comment.user.username }}</strong> ({{ comment.created_at }}):<br>
+            {{ comment.content }}
+        </li>
+    {% endfor %}
+</ul>
+{% if user.is_authenticated %}
+<form method="post">
+    {% csrf_token %}
+    {{ comment_form.as_p }}
+    <button type="submit" class="btn btn-primary">Add Comment</button>
+</form>
+{% else %}
+<p>You must be logged in to comment.</p>
+{% endif %}
+{% endblock %}
+

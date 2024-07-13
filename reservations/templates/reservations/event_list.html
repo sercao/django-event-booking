@@ -1,0 +1,27 @@
+<!-- event_booking/reservations/templates/reservations/event_list.html -->
+
+{% extends "base.html" %}
+
+{% block title %}Event List{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1>Events</h1>
+    <form method="GET" action=".">
+        <div class="input-group mb-3">
+            <input type="text" name="q" placeholder="Search events" class="form-control" value="{{ request.GET.q }}">
+            <div class="input-group-append">
+                <button type="submit" class="btn btn-primary">Search</button>
+            </div>
+        </div>
+    </form>
+    <ul class="list-group">
+        {% for event in events %}
+        <li class="list-group-item">
+            <a href="{% url 'event_detail' event.pk %}">{{ event.name }} - {{ event.date }}</a>
+        </li>
+        {% endfor %}
+    </ul>
+    <a href="{% url 'event_new' %}" class="btn btn-primary mt-3">Create new event</a>
+</div>
+{% endblock %}
